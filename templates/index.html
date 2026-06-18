@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#2563eb">
+    <title>高中地理大题答题模板生成器</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="header-inner">
+            <h1 class="logo">
+                <span class="logo-icon">🌍</span>
+                <span class="logo-text">高中地理大题答题模板生成器</span>
+            </h1>
+            <div class="header-actions">
+                <button id="themeToggle" class="btn-theme" title="切换暗色模式">🌙</button>
+                <span id="api-status" class="status-badge">检查中...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体区域 -->
+    <main class="main-container">
+        <!-- 左侧配置面板 -->
+        <aside class="config-panel" id="configPanel">
+            <div class="panel-section">
+                <h2 class="section-title">📋 选择题型</h2>
+                <div class="type-grid" id="typeGrid">
+                    <!-- JS 动态填充 -->
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h2 class="section-title">📂 子类型侧重</h2>
+                <select id="subtypeSelect" class="form-select">
+                    <option value="">-- 请先选择题型 --</option>
+                </select>
+            </div>
+
+            <div class="panel-section">
+                <h2 class="section-title">📝 输入题目或知识点</h2>
+                <textarea
+                    id="topicInput"
+                    class="form-textarea"
+                    rows="4"
+                    placeholder="例如：分析长江中下游地区洪涝灾害多发的原因"
+                ></textarea>
+            </div>
+
+            <div class="panel-section panel-section-row">
+                <div class="form-group-half">
+                    <h2 class="section-title">📚 知识模块</h2>
+                    <select id="moduleSelect" class="form-select">
+                        <!-- JS 动态填充 -->
+                    </select>
+                </div>
+                <div class="form-group-half">
+                    <h2 class="section-title">🎯 模板难度</h2>
+                    <select id="difficultySelect" class="form-select">
+                        <!-- JS 动态填充 -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <button id="generateBtn" class="btn-generate" disabled>
+                    ✨ 生成答题模板
+                </button>
+                <p id="apiHint" class="hint-text"></p>
+            </div>
+
+            <!-- 历史记录 -->
+            <div class="panel-section" id="historySection" style="display:none;">
+                <h2 class="section-title">🕐 历史记录</h2>
+                <div id="historyList" class="history-list"></div>
+                <button id="clearHistoryBtn" class="btn-text">清空记录</button>
+            </div>
+        </aside>
+
+        <!-- 右侧结果面板 -->
+        <section class="result-panel" id="resultPanel">
+            <div class="result-placeholder" id="resultPlaceholder">
+                <div class="placeholder-content">
+                    <div class="placeholder-icon">📖</div>
+                    <h2>地理大题答题模板</h2>
+                    <p>在左侧选择题型并输入题目，</p>
+                    <p>点击「生成答题模板」即可获得 AI 生成的规范化答题模板。</p>
+                    <div class="feature-hints">
+                        <div class="hint-item">🔍 <span>成因分析</span></div>
+                        <div class="hint-item">⚖️ <span>影响评价</span></div>
+                        <div class="hint-item">📊 <span>特征描述</span></div>
+                        <div class="hint-item">🛠️ <span>措施建议</span></div>
+                        <div class="hint-item">🔄 <span>对比分析</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-content" id="resultContent" style="display:none;">
+                <div class="result-toolbar">
+                    <h3>📄 答题模板</h3>
+                    <div class="toolbar-actions">
+                        <button id="copyBtn" class="btn-tool" title="复制全文">📋 复制</button>
+                        <button id="printBtn" class="btn-tool" title="打印模板">🖨️ 打印</button>
+                    </div>
+                </div>
+
+                <!-- 加载动画 -->
+                <div class="loading-spinner" id="loadingSpinner" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>AI 正在生成答题模板...</p>
+                </div>
+
+                <!-- 错误提示 -->
+                <div class="error-box" id="errorBox" style="display:none;"></div>
+
+                <!-- 模板内容 -->
+                <div class="template-content" id="templateContent"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>Powered by Claude AI &nbsp;|&nbsp; 高中地理教研辅助工具 &nbsp;|&nbsp; 仅供教学参考</p>
+        <p class="footer-url" id="footerUrl" style="display:none; margin-top:4px;">
+            📱 当前公网地址：<a id="footerPublicUrl" href="" target="_blank" style="color: var(--primary);"></a>
+        </p>
+    </footer>
+
+    <!-- 移动端底部导航栏 -->
+    <nav class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-btn active" data-panel="config" title="输入题目">
+            <span class="nav-icon">📝</span>
+            <span class="nav-label">输入题目</span>
+        </button>
+        <button class="mobile-nav-btn" data-panel="result" title="查看模板">
+            <span class="nav-icon">📄</span>
+            <span class="nav-label">查看模板</span>
+            <span class="nav-badge" id="resultBadge" style="display:none;">●</span>
+        </button>
+    </nav>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
