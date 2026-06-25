@@ -384,5 +384,7 @@ if __name__ == "__main__":
     print("=" * 60)
 
     port = int(os.environ.get('PORT', 5000))
-    debug = os.environ.get('FLASK_DEBUG', '1') == '1'
+    # 本地开发默认 debug=True，云端生产默认 debug=False
+    is_production = os.environ.get('RENDER') or os.environ.get('PRODUCTION')
+    debug = os.environ.get('FLASK_DEBUG', '0' if is_production else '1') == '1'
     app.run(debug=debug, host="0.0.0.0", port=port)
