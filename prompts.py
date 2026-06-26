@@ -361,7 +361,7 @@ QUESTION_TYPE_PROMPTS = {
     },
     "措施建议类": {
         "system_extra": MEASURE_SUGGESTION_PROMPT,
-        "subtypes": ["工程措施", "生物措施", "技术措施", "管理措施"],
+        "subtypes": ["工程措施", "生物措施", "技术措施", "管理措施", "综合措施"],
         "label": "措施建议类",
         "icon": "🛠️",
         "description": "针对地理问题提出解决措施"
