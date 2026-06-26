@@ -13,6 +13,9 @@ __pycache__/
 .tunnel_url
 .tunnel_log
 
+# 本地数据库
+*.db
+
 # IDE
 .idea/
 .vscode/

@@ -386,7 +386,8 @@ DIFFICULTY_LEVELS = {
 
 
 def build_full_system_prompt(question_type: str, question_subtype: str,
-                              knowledge_module: str, difficulty: str) -> str:
+                              knowledge_module: str, difficulty: str,
+                              knowledge_context: str = "") -> str:
     """构建完整的 System Prompt"""
     type_info = QUESTION_TYPE_PROMPTS.get(question_type)
     if not type_info:
@@ -394,10 +395,22 @@ def build_full_system_prompt(question_type: str, question_subtype: str,
 
     difficulty_note = DIFFICULTY_LEVELS.get(difficulty, "")
 
+    # 知识库注入段
+    knowledge_section = ""
+    if knowledge_context:
+        knowledge_section = f"""
+## 📚 参考知识库（来自教师上传的例题和知识点）
+以下是与本题相关的参考内容，请充分借鉴其中的答题思路、术语和得分要点：
+
+{knowledge_context}
+
+**使用说明**：上述参考内容是教师精选的高质量范例，你应借鉴其结构逻辑和专业术语，但要根据具体题目灵活调整，不能机械照搬。
+"""
+
     return f"""{SYSTEM_PROMPT_BASE}
 
 {type_info["system_extra"]}
-
+{knowledge_section}
 ## 当前配置
 - 子类型侧重：{question_subtype}
 - 知识模块：{knowledge_module}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库管理 - 地理答题模板生成器</title>
+    <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+    <header class="admin-header">
+        <h1>📚 知识库管理</h1>
+        <div class="header-right">
+            <a href="/" class="btn-sm">← 返回首页</a>
+            <button class="btn-sm btn-danger" onclick="handleLogout()">退出登录</button>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- 侧边栏 -->
+        <aside class="admin-sidebar">
+            <nav>
+                <a href="#" class="nav-item active" data-tab="例题">📝 例题库</a>
+                <a href="#" class="nav-item" data-tab="知识点">📚 知识点库</a>
+            </nav>
+            <div class="sidebar-stats">
+                <p>例题：<strong id="stat-example">-</strong> 条</p>
+                <p>知识点：<strong id="stat-knowledge">-</strong> 条</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="admin-main">
+            <!-- 搜索和添加 -->
+            <div class="toolbar">
+                <input type="text" id="searchInput" class="search-input" placeholder="搜索标题、标签或内容...">
+                <button class="btn-primary" onclick="openAddForm()">＋ 新增</button>
+            </div>
+
+            <!-- 条目列表 -->
+            <div id="entryList" class="entry-list"></div>
+
+            <!-- 分页信息 -->
+            <p id="listInfo" class="list-info"></p>
+        </main>
+    </div>
+
+    <!-- 编辑/新增弹窗 -->
+    <div class="modal-overlay" id="modalOverlay" style="display:none;">
+        <div class="modal">
+            <h3 id="modalTitle">新增条目</h3>
+            <form id="entryForm" onsubmit="handleSave(event)">
+                <input type="hidden" id="editId">
+                <div class="form-row">
+                    <label>类型</label>
+                    <select id="entryType" class="form-input">
+                        <option value="例题">📝 例题</option>
+                        <option value="知识点">📚 知识点</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>关联题型</label>
+                    <select id="entryCategory" class="form-input">
+                        <option value="通用">通用</option>
+                        <option value="成因分析类">成因分析类</option>
+                        <option value="影响评价类">影响评价类</option>
+                        <option value="特征描述类">特征描述类</option>
+                        <option value="措施建议类">措施建议类</option>
+                        <option value="比较类">比较类</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label>标题 <span class="required">*</span></label>
+                    <input type="text" id="entryTitle" class="form-input" placeholder="例如：黄土高原水土流失原因分析" required>
+                </div>
+                <div class="form-row">
+                    <label>标签（逗号分隔）</label>
+                    <input type="text" id="entryTags" class="form-input" placeholder="例如：水土流失,黄土高原,生态保护">
+                </div>
+                <div class="form-row">
+                    <label>完整内容</label>
+                    <textarea id="entryContent" class="form-input form-textarea" rows="8" placeholder="输入例题完整解答或知识点详细说明..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>

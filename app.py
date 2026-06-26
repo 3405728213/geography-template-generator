@@ -24,6 +24,14 @@ from prompts import (
 )
 
 app = Flask(__name__)
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'geo-template-secret-key-change-in-production')
+
+# 注册后台管理蓝图
+from admin_routes import admin_bp
+app.register_blueprint(admin_bp)
+
+# 导入知识库
+from database import search_knowledge
 
 # ----------------------------------------------------------------
 # 配置
@@ -268,12 +276,28 @@ def generate_template():
             "error": f"未配置 {provider_name} API Key。请在 .env 文件中设置 {key_var}"
         }), 500
 
+    # 检索知识库
+    knowledge_context = ""
+    try:
+        relevant = search_knowledge(topic, question_type, limit=5)
+        if relevant:
+            knowledge_parts = []
+            for entry in relevant:
+                tag = "📝 例题" if entry['type'] == '例题' else '📚 知识点'
+                knowledge_parts.append(
+                    f"【{tag}】{entry['title']}\n{entry['content']}"
+                )
+            knowledge_context = "\n\n".join(knowledge_parts)
+    except Exception:
+        pass  # 知识库不可用时不影响生成
+
     # 构建 Prompt
     system_prompt = build_full_system_prompt(
         question_type=question_type,
         question_subtype=question_subtype,
         knowledge_module=knowledge_module,
-        difficulty=difficulty
+        difficulty=difficulty,
+        knowledge_context=knowledge_context
     )
 
     user_message = f"请为以下题目生成答题模板：\n\n{topic}"
